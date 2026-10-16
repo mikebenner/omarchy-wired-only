@@ -27,6 +27,9 @@ Item {
   // themselves stays off.
   property bool enabled: false
   property bool held: false
+  // A wired port has been seen on this machine, so the widget stays while
+  // the dock is away.
+  property bool portSeen: false
   // The state file has been read (or found missing) once; nothing is switched
   // before that, so a shell restart cannot act on defaults.
   property bool loaded: false
@@ -35,11 +38,19 @@ Item {
   readonly property var devices: Networking.devices ? Networking.devices.values : []
   readonly property bool wired: Model.anyConnected(devices, DeviceType.Wired)
   readonly property bool wifiOn: Networking.wifiEnabled
-  // A radio to switch and a port to plug in; without both there is nothing
-  // for the setting to do and the widget hides.
+  readonly property bool portPresent: Model.hasDeviceType(devices, DeviceType.Wired)
+  // A radio to switch and a port to plug in, now or at some point before;
+  // without both there is nothing for the setting to do and the widget hides.
   readonly property bool available: networkManager
     && Model.hasDeviceType(devices, DeviceType.Wifi)
-    && Model.hasDeviceType(devices, DeviceType.Wired)
+    && (portPresent || portSeen)
+
+  onPortPresentChanged: {
+    if (portPresent && loaded && !portSeen) {
+      portSeen = true
+      persist()
+    }
+  }
 
   // The cable is what changes things. The radio's own changes are left alone
   // on purpose: switching Wi-Fi back on by hand while docked is respected
@@ -71,7 +82,7 @@ Item {
   }
 
   function persist() {
-    stateView.setText(Model.serializeState(enabled, held))
+    stateView.setText(Model.serializeState(enabled, held, portSeen))
   }
 
   // ~/.local/state/omarchy exists on every Omarchy install, so the file needs
@@ -85,15 +96,18 @@ Item {
     onLoaded: {
       var state = Model.parseState(text())
       root.held = state.held
+      root.portSeen = state.portSeen || root.portPresent
       root.enabled = state.enabled
       if (!root.loaded) {
         root.loaded = true
+        if (root.portSeen && !state.portSeen) root.persist()
         root.reconcile()
       }
     }
     onLoadFailed: function(error) {
       if (!root.loaded) {
         root.loaded = true
+        root.portSeen = root.portPresent
         root.reconcile()
       }
     }

@@ -63,12 +63,12 @@ test("with the setting off and nothing held, nothing happens", () => {
 })
 
 test("state parses strictly and falls back to off", () => {
-  assert.deepEqual(Model.parseState('{"enabled":true,"held":true}'), { enabled: true, held: true })
-  assert.deepEqual(Model.parseState('{"enabled":"yes","held":1}'), { enabled: false, held: false }, "only real booleans count")
-  assert.deepEqual(Model.parseState(""), { enabled: false, held: false })
-  assert.deepEqual(Model.parseState("not json"), { enabled: false, held: false })
-  assert.deepEqual(Model.parseState("[]"), { enabled: false, held: false })
-  assert.equal(Model.serializeState(true, false), '{"enabled":true,"held":false}')
+  assert.deepEqual(Model.parseState('{"enabled":true,"held":true,"portSeen":true}'), { enabled: true, held: true, portSeen: true })
+  assert.deepEqual(Model.parseState('{"enabled":"yes","held":1}'), { enabled: false, held: false, portSeen: false }, "only real booleans count")
+  assert.deepEqual(Model.parseState(""), { enabled: false, held: false, portSeen: false })
+  assert.deepEqual(Model.parseState("not json"), { enabled: false, held: false, portSeen: false })
+  assert.deepEqual(Model.parseState("[]"), { enabled: false, held: false, portSeen: false })
+  assert.equal(Model.serializeState(true, false, true), '{"enabled":true,"held":false,"portSeen":true}')
 })
 
 test("tooltips say what the glyph means and what a click does", () => {

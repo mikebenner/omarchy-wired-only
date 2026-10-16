@@ -27,7 +27,7 @@ Then put the widget in the bar, for example beside the network widget:
 omarchy bar put mikebenner.wired-only --after omarchy.network
 ```
 
-The widget shows a cable glyph while the machine has both a Wi-Fi radio and an Ethernet port (a dock's port counts while it is plugged in). Click it to turn the setting on or off; middle-click opens the network panel. Lit means Wi-Fi is being held off for Ethernet right now; struck through means the setting is off.
+The widget shows a cable glyph once the machine has both a Wi-Fi radio and an Ethernet port; a dock's port counts from the first time it has been plugged in, so the widget stays while the dock is away. Click it to turn the setting on or off; middle-click opens the network panel. Lit means Wi-Fi is being held off for Ethernet right now; struck through means the setting is off.
 
 The setting and the "I took the radio" record live in `~/.local/state/omarchy/wired-only.json`.
 

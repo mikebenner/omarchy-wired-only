@@ -36,19 +36,23 @@ function decide(state) {
   return { action: null, held: false }
 }
 
+// `portSeen` remembers that a wired port has been here before: a dock's port
+// is gone the moment the laptop is undocked, and without the memory the
+// widget would vanish exactly when someone wants to turn the setting on
+// before docking, or off after undocking.
 function parseState(raw) {
-  var fallback = { enabled: false, held: false }
+  var fallback = { enabled: false, held: false, portSeen: false }
   try {
     var parsed = JSON.parse(String(raw || ""))
     if (!parsed || typeof parsed !== "object") return fallback
-    return { enabled: parsed.enabled === true, held: parsed.held === true }
+    return { enabled: parsed.enabled === true, held: parsed.held === true, portSeen: parsed.portSeen === true }
   } catch (error) {
     return fallback
   }
 }
 
-function serializeState(enabled, held) {
-  return JSON.stringify({ enabled: !!enabled, held: !!held })
+function serializeState(enabled, held, portSeen) {
+  return JSON.stringify({ enabled: !!enabled, held: !!held, portSeen: !!portSeen })
 }
 
 function tooltip(enabled, wired, held) {
