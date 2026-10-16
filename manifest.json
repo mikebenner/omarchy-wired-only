@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "mikebenner.wired-only",
+  "name": "Wired Only",
+  "version": "0.1.0",
+  "author": "Michael Benner",
+  "license": "MIT",
+  "homepage": "https://github.com/mikebenner/omarchy-wired-only",
+  "description": "Turns Wi-Fi off while Ethernet is connected and back on when the cable goes, so a docked laptop stays single-homed.",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "Widget.qml"
+  },
+  "barWidget": {
+    "displayName": "Wired Only",
+    "description": "A cable glyph that shows whether Wi-Fi is being held off for Ethernet. Click to turn the setting on or off; middle-click opens the network panel.",
+    "category": "Network",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {},
+    "schema": []
+  }
+}
